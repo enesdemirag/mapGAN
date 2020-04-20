@@ -9,8 +9,13 @@ driver.get("https://www.redblobgames.com/maps/mapgen2/embed.html#seed=1&size=hug
 driver.find_element_by_xpath('//*[@id="icons"]').click()
 driver.find_element_by_xpath('//*[@id="size-huge"]').click()
 
+seed = 2367
+
+seed_area = driver.find_element_by_id('seed')
+seed_area.clear()
+seed_area.send_keys(str(seed))
+
 time.sleep(1)
-i = 0
 while True:
     element = driver.find_element_by_id("map")
     location = element.location
@@ -29,10 +34,10 @@ while True:
     # Resize
     im = im.resize((512, 512))
     # Save
-    im.save('dataset/' + str(i) + '.png')
+    im.save('dataset/' + str(seed) + '.png')
     # Next
     driver.find_elements_by_xpath('//*[@id="ui"]/div[2]/div[1]/button[2]')[0].click()
     time.sleep(1)
-    i = i + 1
+    seed = seed + 1
 
 driver.close()
