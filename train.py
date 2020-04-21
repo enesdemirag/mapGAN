@@ -1,4 +1,4 @@
-# Import necassary packages
+# Import dependencies
 import os 
 import time
 import numpy as np
