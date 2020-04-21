@@ -52,7 +52,6 @@ g.summary()
 cprint("--- Discriminator Model ---", "yellow", attrs=['bold'])
 d.summary()
 
-
 # Test generator and discriminator before training
 cprint("To test models please press Enter", "red", attrs=['bold'])
 input()
@@ -111,7 +110,8 @@ def train(dataset, epochs):
 
         epoch_elapsed = time.time() - epoch_start
         cprint("Epoch: %d, Generator Loss: %f, Discriminator Loss: %f, Elapsed Time: %s" %((epoch + 1), g_loss, d_loss, nice_time(epoch_elapsed)), "blue", attrs=['bold'])
-        save_images(epoch,fixed_seed)
+        save_images(epoch, fixed_seed)
+        g.save("map_generator_" + str(eposh) + ".h5")
 
     train_elapsed = time.time() - train_start
     cprint("Training Time: %s" %nice_time(train_elapsed), "yellow", attrs=['bold'])
