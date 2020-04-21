@@ -15,6 +15,9 @@ class GAN(object):
         self.G = None                                       # Generator
         self.AM = None                                      # Adversarial Model
         self.DM = None                                      # Discriminator Model
+        self.cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        self.generator_optimizer = Adam(1.5e-4, 0.5)        # should be tuned
+        self.discriminator_optimizer = Adam(1.5e-4, 0.5)    # should be tuned
 
     def discriminator(self, img_shape):
         self.D = Sequential()
@@ -79,3 +82,12 @@ class GAN(object):
         self.G.add(Activation("tanh"))
 
         return self.G
+
+    def discriminator_loss(self, real_output, fake_output):
+        real_loss = self.cross_entropy(tf.ones_like(real_output), real_output)
+        fake_loss = self.cross_entropy(tf.zeros_like(fake_output), fake_output)
+        total_loss = real_loss + fake_loss
+        return total_loss
+
+    def generator_loss(self, fake_output):
+        return self.cross_entropy(tf.ones_like(fake_output), fake_output)
