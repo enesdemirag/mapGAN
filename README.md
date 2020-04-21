@@ -1,5 +1,8 @@
+[![Language](https://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
+[![Status](https://img.shields.io/badge/framework-tensorflow-orange.svg)](https://github.com/enesdemirag)
+[![License](http://img.shields.io/:license-mit-green.svg)](http://enesdemirag.mit-license.org)
 # map-GANerator
-Height Map generation using Generative Adversarial Network
+2D Map Generator - Generative Adversarial Network
 
 ## Prerequisites
 - [numpy](https://numpy.org/)
