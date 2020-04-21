@@ -1,8 +1,15 @@
 # map-GANerator
 Height Map generation using Generative Adversarial Network
 
+## Prerequisites
+- [numpy](https://numpy.org/)
+- [matplotlib](https://matplotlib.org/)
+- [tensorflow](https://www.tensorflow.org/)
+- [tqdm](https://github.com/tqdm/tqdm)
+- [termcolor](https://pypi.org/project/termcolor/)
+
 ## Dataset
-I wrote [this script](map-scrapper.py) to get random 512x512 map images from [mapgen2](https://github.com/redblobgames/mapgen2) and collect the dataset with 6000 maps. You can get the dataset from [here](#).
+I wrote [this script](map-scrapper.py) to get random 512x512 map images from [mapgen2](https://github.com/redblobgames/mapgen2) and collect the dataset with 6000 maps. You can get the dataset from [here](https://www.kaggle.com/enesdemirag/mapgen2).
 
 ## Model
 I create a Deep Convolutional Generative Adversarial Network (DCGAN) using Tensorflow with the help of Keras.
