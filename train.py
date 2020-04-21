@@ -112,7 +112,7 @@ def train(dataset, epochs):
         epoch_elapsed = time.time() - epoch_start
         cprint("Epoch: %d, Generator Loss: %f, Discriminator Loss: %f, Elapsed Time: %s" %((epoch + 1), g_loss, d_loss, nice_time(epoch_elapsed)), "blue", attrs=['bold'])
         save_images(epoch, fixed_seed)
-        g.save("map-generator-" + str(epoch) + ".h5")
+        g.save("mapGAN-" + str(epoch) + ".h5")
 
     train_elapsed = time.time() - train_start
     cprint("Training Time: %s" %nice_time(train_elapsed), "yellow", attrs=['bold'])
@@ -154,5 +154,5 @@ plt.show()
 # Save generator
 cprint("To save models please press Enter", "red", attrs=['bold'])
 input()
-g.save("map-generator.h5")
-cprint("Generator model saved as 'map_generator.h5'.", "blue", attrs=['bold'])
+g.save("mapGAN.h5")
+cprint("Generator model saved as 'mapGAN.h5'.", "blue", attrs=['bold'])
