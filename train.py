@@ -1,20 +1,15 @@
 # Import necassary packages
 import os 
 import time
-import numpy as np                                          # for gaussian random 
-from PIL import Image                                       # to save results
+import numpy as np
+from model import GAN                                       # DCGAN model
 from tqdm import tqdm                                       # to visualize the training process
 import tensorflow as tf                                     # framework
 from termcolor import cprint                                # colored printing
 import matplotlib.pyplot as plt                             # to show results
-from tensorflow.keras.layers import LeakyReLU               # leaky version of a Rectified Linear Unit
-from tensorflow.keras.optimizers import Adam                # the Adam optimizer
-from tensorflow.keras.layers import Input, Reshape, Dropout, Dense, Flatten, BatchNormalization, Activation, ZeroPadding2D
-from tensorflow.keras.models import Sequential, Model, load_model
-from tensorflow.keras.layers import UpSampling2D, Conv2D
 
 # Configure
-resolution = 64                                             # should be multiple of 32
+resolution = 64                                             # 32 * k,  k > 1
 channels = 3                                                # rgb image
 binary = os.path.join("dataset.npy")                        # Import dataset
 epochs = 50
@@ -37,7 +32,10 @@ cprint("Batch Size: %10d" %batch_size, "green")
 cprint("Buffer Size: %9d\n" %buffer_size, "green")
 
 # Load data
-cprint("Loading dataset from %s" %binary, "blue", attrs=['bold'])
+cprint("Loading dataset from '%s'" %binary, "blue", attrs=['bold'])
 data = np.load(binary)
 dataset = tf.data.Dataset.from_tensor_slices(data).shuffle(buffer_size).batch(batch_size)
 
+# Create models
+gan = GAN(resolution=resolution, channel=channels)
+g = gan.generator(seed_size, resolution, channels)
