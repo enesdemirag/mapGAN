@@ -16,10 +16,10 @@ from tensorflow.keras.layers import UpSampling2D, Conv2D
 # Configure
 resolution = 64                                             # should be multiple of 32
 channels = 3                                                # rgb image
-dataset_path = "dataset/"
+binary = os.path.join("dataset.npy")                        # Import dataset
 epochs = 50
 batch_size = 32
-buffer_size = 60000
+buffer_size = 6000
 
 # Preview
 preview_rows = 3
@@ -35,4 +35,9 @@ cprint("Resolution: %10d" %resolution, "green")
 cprint("Epochs: %14d" %epochs, "green")
 cprint("Batch Size: %10d" %batch_size, "green")
 cprint("Buffer Size: %9d\n" %buffer_size, "green")
+
+# Load data
+cprint("Loading dataset from %s" %binary, "blue", attrs=['bold'])
+data = np.load(binary)
+dataset = tf.data.Dataset.from_tensor_slices(data).shuffle(buffer_size).batch(batch_size)
 
