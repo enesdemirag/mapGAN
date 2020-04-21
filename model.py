@@ -47,7 +47,7 @@ class GAN(object):
         self.D.add(Flatten())
         self.D.add(Dense(1, activation='sigmoid'))
 
-        return model
+        return self.D
 
     def generator(self, seed_size, resolution, channels):
         self.G = Sequential()
@@ -70,7 +70,7 @@ class GAN(object):
         self.G.add(BatchNormalization(momentum=0.8))
         self.G.add(Activation("relu"))
 
-        self.G.add(UpSampling2D(size=(resolution / 32, resolution / 32)))
+        self.G.add(UpSampling2D(size=(int(resolution / 32), int(resolution / 32))))
         self.G.add(Conv2D(128, kernel_size=3, padding="same"))
         self.G.add(BatchNormalization(momentum=0.8))
         self.G.add(Activation("relu"))
@@ -78,4 +78,4 @@ class GAN(object):
         self.G.add(Conv2D(channels, kernel_size=3, padding="same"))
         self.G.add(Activation("tanh"))
 
-        return model
+        return self.G
