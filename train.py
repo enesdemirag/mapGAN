@@ -29,7 +29,8 @@ cprint("--- Configurations ---", "blue", attrs=['bold'])
 cprint("Resolution: %10d" %resolution, "green")
 cprint("Epochs: %14d" %epochs, "green")
 cprint("Batch Size: %10d" %batch_size, "green")
-cprint("Buffer Size: %9d\n" %buffer_size, "green")
+cprint("Buffer Size: %9d" %buffer_size, "green")
+cprint("Seed Size: %11d\n" %seed_size, "green")
 
 # Load data
 cprint("Loading dataset from '%s'" %binary, "blue", attrs=['bold'])
@@ -39,3 +40,10 @@ dataset = tf.data.Dataset.from_tensor_slices(data).shuffle(buffer_size).batch(ba
 # Create models
 gan = GAN(resolution=resolution, channel=channels)
 g = gan.generator(seed_size, resolution, channels)
+
+# Test generator
+cprint("Testing generator output..", "yellow", attrs=['bold', 'blink'])
+noise = tf.random.normal([1, seed_size])
+generated_image = g(noise, training=False)
+plt.imshow(generated_image[0, :, :, 0])
+plt.show()
