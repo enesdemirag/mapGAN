@@ -2,6 +2,7 @@
 import os 
 import time
 import numpy as np
+from PIL import Image
 from model import GAN                                       # DCGAN model
 from tqdm import tqdm                                       # to visualize the training process
 import tensorflow as tf                                     # framework
@@ -14,13 +15,13 @@ channels = 3                                                # rgb image
 binary = os.path.join("dataset.npy")                        # Import dataset
 epochs = 50
 batch_size = 32
-buffer_size = 6000
+buffer_size = 3000
 image_shape = (resolution, resolution, channels)
 
 # Preview
 preview_rows = 3
 preview_cols = 3
-preview_margin = 12
+preview_margin = 10
 
 # Input noise vector size
 seed_size = 100
@@ -111,10 +112,26 @@ def train(dataset, epochs):
         epoch_elapsed = time.time() - epoch_start
         cprint("Epoch: %d, Generator Loss: %f, Discriminator Loss: %f, Elapsed Time: %s" %((epoch + 1), g_loss, d_loss, nice_time(epoch_elapsed)), "blue", attrs=['bold'])
         save_images(epoch, fixed_seed)
-        g.save("map_generator_" + str(eposh) + ".h5")
+        g.save("map-generator-" + str(epoch) + ".h5")
 
     train_elapsed = time.time() - train_start
     cprint("Training Time: %s" %nice_time(train_elapsed), "yellow", attrs=['bold'])
+
+def save_images(index, noise):
+    image_array = np.full((preview_margin * 2 + (preview_rows * (resolution + preview_margin)), preview_margin * 2 + (preview_cols * (resolution + preview_margin)), 3), 255, dtype=np.uint8)
+    generated_images = g.predict(noise)
+    generated_images = 0.5 * generated_images + 0.5
+
+    image_count = 0
+    for row in range(preview_rows):
+        for col in range(preview_cols):
+            r = row * (resolution + 16) + preview_margin
+            c = col * (resolution + 16) + preview_margin
+            image_array[r:r + resolution, c:c + resolution] = generated_images[image_count] * 255
+            image_count += 1
+
+    im = Image.fromarray(image_array)
+    im.save("map-" + str(index + 1) + ".png")
 
 # Train GAN
 cprint("To train network please press Enter", "red", attrs=['bold'])
@@ -137,5 +154,5 @@ plt.show()
 # Save generator
 cprint("To save models please press Enter", "red", attrs=['bold'])
 input()
-g.save("map_generator.h5")
+g.save("map-generator.h5")
 cprint("Generator model saved as 'map_generator.h5'.", "blue", attrs=['bold'])
