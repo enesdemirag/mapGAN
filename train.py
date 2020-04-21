@@ -15,6 +15,7 @@ binary = os.path.join("dataset.npy")                        # Import dataset
 epochs = 50
 batch_size = 32
 buffer_size = 6000
+image_shape = (resolution, resolution, channels)
 
 # Preview
 preview_rows = 3
@@ -40,10 +41,15 @@ dataset = tf.data.Dataset.from_tensor_slices(data).shuffle(buffer_size).batch(ba
 # Create models
 gan = GAN(resolution=resolution, channel=channels)
 g = gan.generator(seed_size, resolution, channels)
+d = gan.discriminator(image_shape)
 
-# Test generator
-cprint("Testing generator output..", "yellow", attrs=['bold', 'blink'])
+# Test generator and discriminator before training
+cprint("Testing generator output..", "yellow", attrs=['bold'])
 noise = tf.random.normal([1, seed_size])
 generated_image = g(noise, training=False)
+prediction = d(generated_image)
+cprint("Generated image is %d%% real." %(prediction * 100), "red")
+
+# Show generated image
 plt.imshow(generated_image[0, :, :, 0])
 plt.show()
