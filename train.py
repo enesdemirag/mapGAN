@@ -27,29 +27,115 @@ seed_size = 100
 
 # Print
 cprint("--- Configurations ---", "blue", attrs=['bold'])
-cprint("Resolution: %10d" %resolution, "green")
+cprint("Resolution: %8dpx" %resolution, "green")
 cprint("Epochs: %14d" %epochs, "green")
 cprint("Batch Size: %10d" %batch_size, "green")
 cprint("Buffer Size: %9d" %buffer_size, "green")
 cprint("Seed Size: %11d\n" %seed_size, "green")
 
-# Load data
+# Load dataset
+cprint("To load dataset please press Enter", "red", attrs=['bold'])
+input()
 cprint("Loading dataset from '%s'" %binary, "blue", attrs=['bold'])
 data = np.load(binary)
 dataset = tf.data.Dataset.from_tensor_slices(data).shuffle(buffer_size).batch(batch_size)
 
-# Create models
+# Load models
+cprint("To load models please press Enter", "red", attrs=['bold'])
+input()
 gan = GAN(resolution=resolution, channel=channels)
 g = gan.generator(seed_size, resolution, channels)
 d = gan.discriminator(image_shape)
 
+cprint("--- Generator Model ---", "yellow", attrs=['bold'])
+g.summary()
+cprint("--- Discriminator Model ---", "yellow", attrs=['bold'])
+d.summary()
+
+
 # Test generator and discriminator before training
-cprint("Testing generator output..", "yellow", attrs=['bold'])
+cprint("To test models please press Enter", "red", attrs=['bold'])
+input()
+cprint("Testing generator output..", "blue", attrs=['bold'])
 noise = tf.random.normal([1, seed_size])
 generated_image = g(noise, training=False)
 prediction = d(generated_image)
-cprint("Generated image is %d%% real." %(prediction * 100), "red")
+cprint("Generated image is %d%% real." %(prediction * 100), "cyan")
 
 # Show generated image
 plt.imshow(generated_image[0, :, :, 0])
 plt.show()
+
+# To show clean looking epoch time
+def nice_time(sec):
+    h = int(sec / (60 * 60))
+    m = int((sec % (60 * 60)) / 60)
+    s = sec % 60
+    return "{}:{:>02}:{:>05.2f}".format(h, m, s)
+
+@tf.function
+def train_step(images):
+    seed = tf.random.normal([batch_size, seed_size])
+
+    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+        generated_images = g(seed, training=True)
+        real_output = d(images, training=True)
+        fake_output = d(generated_images, training=True)
+        
+        gen_loss = gan.generator_loss(fake_output)
+        disc_loss = gan.discriminator_loss(real_output, fake_output)
+    
+        gradients_of_generator = gen_tape.gradient(gen_loss, g.trainable_variables)
+        gradients_of_discriminator = disc_tape.gradient(disc_loss, d.trainable_variables)
+
+        gan.generator_optimizer.apply_gradients(zip(gradients_of_generator, g.trainable_variables))
+        gan.discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, d.trainable_variables))
+    
+    return gen_loss, disc_loss
+
+def train(dataset, epochs):
+    fixed_seed = np.random.normal(0, 1, (preview_rows * preview_cols, seed_size))
+    train_start = time.time()
+
+    for epoch in tqdm(range(epochs)):
+        epoch_start = time.time()
+        gen_loss_list = []
+        disc_loss_list = []
+        for image_batch in dataset:
+            t = train_step(image_batch)
+            gen_loss_list.append(t[0])
+            disc_loss_list.append(t[1])
+
+        g_loss = sum(gen_loss_list) / len(gen_loss_list)
+        d_loss = sum(disc_loss_list) / len(disc_loss_list)
+
+        epoch_elapsed = time.time() - epoch_start
+        cprint("Epoch: %d, Generator Loss: %f, Discriminator Loss: %f, Elapsed Time: %s" %((epoch + 1), g_loss, d_loss, nice_time(epoch_elapsed)), "blue", attrs=['bold'])
+        save_images(epoch,fixed_seed)
+
+    train_elapsed = time.time() - train_start
+    cprint("Training Time: %s" %nice_time(train_elapsed), "yellow", attrs=['bold'])
+
+# Train GAN
+cprint("To train network please press Enter", "red", attrs=['bold'])
+input()
+train(dataset, epochs)
+
+# Test generator and discriminator after training
+cprint("To test models please press Enter", "red", attrs=['bold'])
+input()
+cprint("Testing generator output..", "blue", attrs=['bold'])
+noise = tf.random.normal([1, seed_size])
+generated_image = g(noise, training=False)
+prediction = d(generated_image)
+cprint("Generated image is %d%% real." %(prediction * 100), "cyan")
+
+# Show generated image
+plt.imshow(generated_image[0, :, :, 0])
+plt.show()
+
+# Save generator
+cprint("To save models please press Enter", "red", attrs=['bold'])
+input()
+g.save("map_generator.h5")
+cprint("Generator model saved as 'map_generator.h5'.", "blue", attrs=['bold'])
