@@ -4,7 +4,6 @@ import time
 import numpy as np
 from PIL import Image
 from model import GAN                                       # DCGAN model
-from tqdm import tqdm                                       # to visualize the training process
 import tensorflow as tf                                     # framework
 from termcolor import cprint                                # colored printing
 import matplotlib.pyplot as plt                             # to show results
@@ -97,7 +96,7 @@ def train(dataset, epochs):
     fixed_seed = np.random.normal(0, 1, (preview_rows * preview_cols, seed_size))
     train_start = time.time()
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in range(epochs):
         epoch_start = time.time()
         gen_loss_list = []
         disc_loss_list = []
