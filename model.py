@@ -1,4 +1,4 @@
-# Import necassary packages
+# Import dependencies
 import tensorflow as tf
 from tensorflow.keras.layers import LeakyReLU
 from tensorflow.keras.optimizers import Adam
@@ -13,11 +13,11 @@ class GAN(object):
         self.channel = channel
         self.D = None                                       # Discriminator
         self.G = None                                       # Generator
-        self.AM = None                                      # Adversarial Model
-        self.DM = None                                      # Discriminator Model
         self.cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         self.generator_optimizer = Adam(1.5e-4, 0.5)        # should be tuned
         self.discriminator_optimizer = Adam(1.5e-4, 0.5)    # should be tuned
+        # self.G_losses = []
+        # self.D_losses = []
 
     def discriminator(self, img_shape):
         self.D = Sequential()
