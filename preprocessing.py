@@ -21,7 +21,7 @@ for image in tqdm(images):
 
     x = img_to_array(img)                                   # Convert to numpy array
     x = x.reshape((resolution, resolution, channels))       # Reshape
-    x = (x - 128.0) / 128.0                                 # Normalize (Between -1 to +1)
+    x = x / 255.0                                           # Normalize (Between 0 to 1)
     dataset[i] = x
     i = i + 1
 
