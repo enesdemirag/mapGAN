@@ -97,6 +97,7 @@ def train(dataset, epochs):
     train_start = time.time()
 
     for epoch in range(epochs):
+        cprint("Training... Epoch: %d" %(epoch + 1), "green", attrs=['blink'])
         epoch_start = time.time()
         gen_loss_list = []
         disc_loss_list = []
@@ -111,7 +112,7 @@ def train(dataset, epochs):
         epoch_elapsed = time.time() - epoch_start
         cprint("Epoch: %d, Generator Loss: %f, Discriminator Loss: %f, Elapsed Time: %s" %((epoch + 1), g_loss, d_loss, nice_time(epoch_elapsed)), "blue", attrs=['bold'])
         save_images(epoch, fixed_seed)
-        g.save("mapGAN-" + str(epoch) + ".h5")
+        # g.save("mapGAN-" + str(epoch) + ".h5")
 
     train_elapsed = time.time() - train_start
     cprint("Training Time: %s" %nice_time(train_elapsed), "yellow", attrs=['bold'])
