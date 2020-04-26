@@ -12,7 +12,12 @@
 - [termcolor](https://pypi.org/project/termcolor/)
 
 ## Dataset
-I wrote [this script](map-scrapper.py) to get random 512x512 map images from [mapgen2](https://github.com/redblobgames/mapgen2) and collect the dataset with 6000 maps. You can get the dataset from [here](https://www.kaggle.com/enesdemirag/mapgen2).
+I wrote [this script](map-scrapper.py) to get random 512x512 map images from [mapgen2](https://github.com/redblobgames/mapgen2) and collect the dataset with 6000 maps.
+
+## Run
+- Get the dataset from [here](https://www.kaggle.com/enesdemirag/mapgen2).
+- Clone this repo and run [train](train.py) script to train from start with your desired hyperparameters for dataset and models.
+> You can also run [this notebook](mapGAN.ipynb) on colab for faster results.
 
 ## Model
 I create a Deep Convolutional Generative Adversarial Network (DCGAN) using Tensorflow with the help of Keras.
@@ -125,3 +130,7 @@ _________________________________________________________________
 dense_1 (Dense)              (None, 1)                 41473     
 =================================================================
 ```
+
+# TODO
+- Increase resolution
+- Upload full dataset to kaggle
