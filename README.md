@@ -134,3 +134,4 @@ dense_1 (Dense)              (None, 1)                 41473
 # TODO
 - Increase resolution
 - Upload full dataset to kaggle
+- Plot loss
