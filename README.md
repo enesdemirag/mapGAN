@@ -19,6 +19,9 @@ I wrote [this script](map-scrapper.py) to get random 512x512 map images from [ma
 - Clone this repo and run [train](train.py) script to train from start with your desired hyperparameters for dataset and models.
 > You can also run [this notebook](mapGAN.ipynb) on colab for faster results.
 
+## Results
+![epochs](results.gif)
+
 ## Model
 I create a Deep Convolutional Generative Adversarial Network (DCGAN) using Tensorflow with the help of Keras.
 
