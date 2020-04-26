@@ -2,6 +2,7 @@
 dataset/
 dataset.npy
 temp.png
+mapGAN.h5
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
